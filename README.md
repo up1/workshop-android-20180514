@@ -42,5 +42,5 @@ $fastlane screengrab
 2. Add more tests for new features (Test-Driven Development)
 3. Working with REST APIs (Retrofit and OkHTTP)
 4. How to testing with REST APIs ? (MockWebServer vs Stubby4J vs Real API)
-5. Testable application (Refactor with confidene)
+5. Testable application (Refactor with confidence)
 6. Working with Continuous Integration (Jenkins)
