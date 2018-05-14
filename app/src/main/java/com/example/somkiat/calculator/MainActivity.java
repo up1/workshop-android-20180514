@@ -1,5 +1,6 @@
 package com.example.somkiat.calculator;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,14 +19,17 @@ public class MainActivity extends AppCompatActivity {
         EditText editFirst = findViewById(R.id.edt_first);
         EditText editSecond = findViewById(R.id.edt_second);
 
-        if(editFirst != null) {
-            int first = Integer.parseInt(editFirst.getText().toString());
-            int second = Integer.parseInt(editSecond.getText().toString());
-            Calculator calculator = new Calculator();
-            int result = calculator.plus(first, second);
+        int first = Integer.parseInt(editFirst.getText().toString());
+        int second = Integer.parseInt(editSecond.getText().toString());
+        Calculator calculator = new Calculator();
+        int result = calculator.plus(first, second);
 
-            TextView txvResult = findViewById(R.id.txv_result);
-            txvResult.setText("Result = " + result);
-        }
+        // Send data to Result Activity
+        Intent intent =
+                new Intent(this,
+                            ResultActivity.class);
+        intent.putExtra("result", String.valueOf(result));
+        startActivity(intent);
+
     }
 }
