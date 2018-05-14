@@ -38,9 +38,13 @@ public class MainActivity extends AppCompatActivity {
         // Prepare value
         String expression = String.format("%d+%d", first, second);
 
+        // Create application instance
+        DemoApplication demoApplication
+                = (DemoApplication)getApplication();
+
         // Call service with retrofit
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(HTTP_API_MATHJS_ORG)
+                .baseUrl(demoApplication.getBaseUrl())
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(OkHttpProvider.getOkHttpInstance())
                 .build();
