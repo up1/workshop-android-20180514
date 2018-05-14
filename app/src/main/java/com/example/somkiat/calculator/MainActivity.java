@@ -16,6 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static String HTTP_API_MATHJS_ORG = "http://api.mathjs.org";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Call service with retrofit
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.mathjs.org")
+                .baseUrl(HTTP_API_MATHJS_ORG)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(OkHttpProvider.getOkHttpInstance())
                 .build();
