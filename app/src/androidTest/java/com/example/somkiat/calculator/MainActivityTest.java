@@ -67,6 +67,9 @@ public class MainActivityTest {
                 .check(matches(withText("Result = 2")));
         Screengrab.screenshot("step03");
 
+
+        IdlingRegistry.getInstance().unregister(idlingResource);
+
     }
 
 }
