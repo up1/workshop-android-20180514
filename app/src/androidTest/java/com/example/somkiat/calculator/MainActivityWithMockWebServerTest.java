@@ -38,35 +38,26 @@ public class MainActivityWithMockWebServerTest {
     public ActivityTestRule<MainActivity> activityTestRule =
             new ActivityTestRule<>(MainActivity.class, true, false);
 
-    private IdlingResource idlingResource;
+    @Rule
+    public OkHttpIdlingResourceRule okHttpIdlingResourceRule = new OkHttpIdlingResourceRule();
+
+    @Rule
+    public MockWebServerRule mockWebServerRule = new MockWebServerRule();
 
     @Before
     public void start() {
-        IdlingResource idlingResource
-                = OkHttp3IdlingResource.create(
-                "okhttp", OkHttpProvider.getOkHttpInstance());
-
-        IdlingRegistry.getInstance().register(idlingResource);
+        TestDemoApplication app = (TestDemoApplication)
+                InstrumentationRegistry.getTargetContext().getApplicationContext();
+        app.setBaseUrl(mockWebServerRule.server.url("/").toString());
     }
 
-    @After
-    public void finish() {
-        IdlingRegistry.getInstance().unregister(idlingResource);
-    }
 
     @Test
     public void success() throws InterruptedException, IOException {
 
-        // 1. Setup MockWebServer
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setBody("2"));
-        server.start();
-        String url = server.url("/").toString();
-
-        // 2. Replace URL of REST API with MockWebServer
-        TestDemoApplication app = (TestDemoApplication)
-                InstrumentationRegistry.getTargetContext().getApplicationContext();
-        app.setBaseUrl(server.url("/").toString());
+        mockWebServerRule.server.enqueue(
+                new MockResponse()
+                        .setBody("2"));
 
         activityTestRule.launchActivity(null);
 
@@ -85,22 +76,14 @@ public class MainActivityWithMockWebServerTest {
 
         onView(withId(R.id.txv_result))
                 .check(matches(withText("Result = 2")));
-
-        server.shutdown();
     }
 
     @Test
     public void failure_404() throws Exception {
 
-        // 1. Setup MockWebServer
-        MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setResponseCode(404));
-
-        server.start();
-        String url = server.url("/").toString();
-
-        // 2. Replace URL of REST API with MockWebServer
-        MainActivity.HTTP_API_MATHJS_ORG = url;
+        mockWebServerRule.server.enqueue(
+                new MockResponse()
+                        .setResponseCode(404));
 
         activityTestRule.launchActivity(null);
 
@@ -116,25 +99,15 @@ public class MainActivityWithMockWebServerTest {
                         closeSoftKeyboard());
 
         onView(withId(R.id.btn_calculate)).perform(click());
-
-        server.shutdown();
     }
 
     @Test
     public void failure_timeout() throws Exception {
 
-        // 1. Setup MockWebServer
-        MockWebServer server = new MockWebServer();
-        server.enqueue(
+        mockWebServerRule.server.enqueue(
                 new MockResponse()
                         .setBody("2")
                         .throttleBody(1, 1, TimeUnit.SECONDS));
-
-        server.start();
-        String url = server.url("/").toString();
-
-        // 2. Replace URL of REST API with MockWebServer
-        MainActivity.HTTP_API_MATHJS_ORG = url;
 
         activityTestRule.launchActivity(null);
 
@@ -150,8 +123,6 @@ public class MainActivityWithMockWebServerTest {
                         closeSoftKeyboard());
 
         onView(withId(R.id.btn_calculate)).perform(click());
-
-        server.shutdown();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.somkiat.calculator;
 
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
@@ -34,7 +35,7 @@ public class MainActivityTest {
 
     @Rule
     public ActivityTestRule<MainActivity> activityTestRule =
-            new ActivityTestRule<>(MainActivity.class);
+            new ActivityTestRule<>(MainActivity.class, true, false);
 
     @Test
     public void plus_1_and_1_should_result_2() throws InterruptedException {
@@ -45,6 +46,13 @@ public class MainActivityTest {
                 "okhttp", OkHttpProvider.getOkHttpInstance());
 
         IdlingRegistry.getInstance().register(idlingResource);
+
+
+        TestDemoApplication app = (TestDemoApplication)
+                InstrumentationRegistry.getTargetContext().getApplicationContext();
+        app.setBaseUrl("http://api.mathjs.org");
+
+        activityTestRule.launchActivity(null);
 
         onView(withId(R.id.edt_first))
                 .perform(
