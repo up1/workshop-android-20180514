@@ -1,5 +1,6 @@
 package com.example.somkiat.calculator;
 
+import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.IdlingRegistry;
 import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
@@ -58,12 +59,14 @@ public class MainActivityWithMockWebServerTest {
 
         // 1. Setup MockWebServer
         MockWebServer server = new MockWebServer();
-        server.enqueue(new MockResponse().setBody("3"));
+        server.enqueue(new MockResponse().setBody("2"));
         server.start();
         String url = server.url("/").toString();
 
         // 2. Replace URL of REST API with MockWebServer
-        MainActivity.HTTP_API_MATHJS_ORG = url;
+        TestDemoApplication app = (TestDemoApplication)
+                InstrumentationRegistry.getTargetContext().getApplicationContext();
+        app.setBaseUrl(server.url("/").toString());
 
         activityTestRule.launchActivity(null);
 
