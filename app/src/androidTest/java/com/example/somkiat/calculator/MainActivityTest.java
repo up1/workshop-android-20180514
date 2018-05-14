@@ -1,10 +1,16 @@
 package com.example.somkiat.calculator;
 
+import android.support.test.espresso.IdlingRegistry;
+import android.support.test.espresso.IdlingResource;
 import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
+
+import com.jakewharton.espresso.OkHttp3IdlingResource;
 
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import tools.fastlane.screengrab.Screengrab;
 import tools.fastlane.screengrab.locale.LocaleTestRule;
@@ -19,6 +25,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.junit.Assert.*;
 
 
+@RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
     @ClassRule
@@ -30,7 +37,15 @@ public class MainActivityTest {
             new ActivityTestRule<>(MainActivity.class);
 
     @Test
-    public void plus_1_and_1_should_result_2() {
+    public void plus_1_and_1_should_result_2() throws InterruptedException {
+
+
+        IdlingResource idlingResource
+                = OkHttp3IdlingResource.create(
+                "okhttp", OkHttpProvider.getOkHttpInstance());
+
+        IdlingRegistry.getInstance().register(idlingResource);
+
         onView(withId(R.id.edt_first))
                 .perform(
                         replaceText("1"),
@@ -45,6 +60,8 @@ public class MainActivityTest {
         Screengrab.screenshot("step02");
 
         onView(withId(R.id.btn_calculate)).perform(click());
+
+//        Thread.sleep(2000);
 
         onView(withId(R.id.txv_result))
                 .check(matches(withText("Result = 2")));
