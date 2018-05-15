@@ -31,17 +31,12 @@ public class MainActivityTest {
 
     @Test
     public void plus_1_and_1_should_result_2() {
-        onView(withId(R.id.edt_first))
-                .perform(
-                        replaceText("1"),
-                        closeSoftKeyboard());
+        CalculatorPage.กรอกเลขตัวแรก("1");
         Screengrab.screenshot("step01");
 
         onView(withId(R.id.btn_plus)).perform(click());
 
-        onView(withId(R.id.edt_second))
-                .perform(replaceText("1"),
-                        closeSoftKeyboard());
+        CalculatorPage.กรอกเลขตัวสอง("1");
         Screengrab.screenshot("step02");
 
         onView(withId(R.id.btn_calculate)).perform(click());
